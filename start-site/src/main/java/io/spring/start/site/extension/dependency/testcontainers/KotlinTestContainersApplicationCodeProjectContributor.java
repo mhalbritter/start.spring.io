@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ class KotlinTestContainersApplicationCodeProjectContributor extends
 
 	@Override
 	protected void contributeCode(KotlinSourceCode sourceCode) {
+		super.contributeCode(sourceCode);
 		customizeApplicationTypeDeclaration(sourceCode, (type) -> type.modifiers(KotlinModifier.PUBLIC));
 	}
 
@@ -62,9 +63,9 @@ class KotlinTestContainersApplicationCodeProjectContributor extends
 		super.customizeApplicationCompilationUnit(sourceCode, customizer
 			.andThen((compilationUnit) -> compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
 				.parameters(Parameter.of("args", "Array<String>"))
-				.body(CodeBlock.ofStatement("$T<$L>().$T($L::class).run(*args)",
+				.body(CodeBlock.ofStatement("$T<$L>().$T($T::class).run(*args)",
 						"org.springframework.boot.fromApplication", getDescription().getApplicationName(),
-						"org.springframework.boot.with", getTestApplicationName())))));
+						"org.springframework.boot.with", TESTCONTAINERS_CONFIGURATION_CLASS_NAME)))));
 	}
 
 	@Override
