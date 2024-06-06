@@ -380,7 +380,6 @@ class TestcontainersProjectGenerationConfigurationTests extends AbstractExtensio
 				import org.springframework.boot.fromApplication
 				import org.springframework.boot.with
 
-				class TestDemoApplication
 
 				fun main(args: Array<String>) {
 					fromApplication<DemoApplication>().with(TestcontainersConfiguration::class).run(*args)

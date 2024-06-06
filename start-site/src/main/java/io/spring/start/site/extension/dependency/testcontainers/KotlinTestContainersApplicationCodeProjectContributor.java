@@ -17,7 +17,6 @@
 package io.spring.start.site.extension.dependency.testcontainers;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
@@ -25,7 +24,6 @@ import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.kotlin.KotlinCompilationUnit;
 import io.spring.initializr.generator.language.kotlin.KotlinFunctionDeclaration;
-import io.spring.initializr.generator.language.kotlin.KotlinModifier;
 import io.spring.initializr.generator.language.kotlin.KotlinSourceCode;
 import io.spring.initializr.generator.language.kotlin.KotlinSourceCodeWriter;
 import io.spring.initializr.generator.language.kotlin.KotlinTypeDeclaration;
@@ -54,18 +52,12 @@ class KotlinTestContainersApplicationCodeProjectContributor extends
 	@Override
 	protected void contributeCode(KotlinSourceCode sourceCode) {
 		super.contributeCode(sourceCode);
-		customizeApplicationTypeDeclaration(sourceCode, (type) -> type.modifiers(KotlinModifier.PUBLIC));
-	}
-
-	@Override
-	protected void customizeApplicationCompilationUnit(KotlinSourceCode sourceCode,
-			Consumer<KotlinCompilationUnit> customizer) {
-		super.customizeApplicationCompilationUnit(sourceCode, customizer
-			.andThen((compilationUnit) -> compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
-				.parameters(Parameter.of("args", "Array<String>"))
-				.body(CodeBlock.ofStatement("$T<$L>().$T($T::class).run(*args)",
-						"org.springframework.boot.fromApplication", getDescription().getApplicationName(),
-						"org.springframework.boot.with", TESTCONTAINERS_CONFIGURATION_CLASS_NAME)))));
+		customizeApplicationCompilationUnit(sourceCode,
+				(compilationUnit) -> compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
+					.parameters(Parameter.of("args", "Array<String>"))
+					.body(CodeBlock.ofStatement("$T<$L>().$T($T::class).run(*args)",
+							"org.springframework.boot.fromApplication", getDescription().getApplicationName(),
+							"org.springframework.boot.with", TESTCONTAINERS_CONFIGURATION_CLASS_NAME))));
 	}
 
 	@Override
