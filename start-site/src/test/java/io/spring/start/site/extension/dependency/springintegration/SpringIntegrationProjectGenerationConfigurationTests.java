@@ -22,6 +22,7 @@ import io.spring.initializr.generator.test.io.TextAssert;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,7 +45,7 @@ class SpringIntegrationProjectGenerationConfigurationTests extends AbstractExten
 	void buildWithOnlySpringIntegration() {
 		Dependency integrationTest = integrationDependency("test");
 		integrationTest.setScope(Dependency.SCOPE_TEST);
-		assertThat(generateProject("3.2.0", "integration")).mavenBuild()
+		assertThat(generateProject(SupportedBootVersion.latest().getVersion(), "integration")).mavenBuild()
 			.hasDependency(getDependency("integration"))
 			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST))
 			.hasDependency(integrationTest);
@@ -53,7 +54,8 @@ class SpringIntegrationProjectGenerationConfigurationTests extends AbstractExten
 	@ParameterizedTest
 	@MethodSource("supportedEntries")
 	void buildWithSupportedEntries(String springBootDependencyId, String integrationModuleId) {
-		assertThat(generateProject("3.2.0", "integration", springBootDependencyId)).mavenBuild()
+		assertThat(generateProject(SupportedBootVersion.latest().getVersion(), "integration", springBootDependencyId))
+			.mavenBuild()
 			.hasDependency(getDependency("integration"))
 			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST))
 			.hasDependency(integrationDependency(integrationModuleId));
@@ -67,10 +69,9 @@ class SpringIntegrationProjectGenerationConfigurationTests extends AbstractExten
 				Arguments.arguments("data-r2dbc", "r2dbc"), Arguments.arguments("data-redis", "redis"),
 				Arguments.arguments("data-redis-reactive", "redis"), Arguments.arguments("kafka", "kafka"),
 				Arguments.arguments("kafka-streams", "kafka"), Arguments.arguments("mail", "mail"),
-				Arguments.arguments("rsocket", "rsocket"), Arguments.arguments("security", "security"),
-				Arguments.arguments("web", "http"), Arguments.arguments("webflux", "webflux"),
-				Arguments.arguments("websocket", "websocket"), Arguments.arguments("websocket", "stomp"),
-				Arguments.arguments("web-services", "ws"));
+				Arguments.arguments("rsocket", "rsocket"), Arguments.arguments("web", "http"),
+				Arguments.arguments("webflux", "webflux"), Arguments.arguments("websocket", "websocket"),
+				Arguments.arguments("websocket", "stomp"), Arguments.arguments("web-services", "ws"));
 	}
 
 	@ParameterizedTest
@@ -108,8 +109,8 @@ class SpringIntegrationProjectGenerationConfigurationTests extends AbstractExten
 	}
 
 	@Test
-	void securityAddsSpringSecurityMessagingOnBoot3dot3() {
-		assertThat(generateProject("3.3.0", "integration", "security")).mavenBuild()
+	void securityAddsSpringSecurityMessaging() {
+		assertThat(generateProject(SupportedBootVersion.latest().getVersion(), "integration", "security")).mavenBuild()
 			.hasDependency("org.springframework.security", "spring-security-messaging")
 			.doesNotHaveDependency("org.springframework.integration", "spring-integration-security");
 

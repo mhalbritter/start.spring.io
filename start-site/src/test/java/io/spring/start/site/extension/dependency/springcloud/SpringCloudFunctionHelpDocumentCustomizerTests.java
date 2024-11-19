@@ -19,6 +19,7 @@ package io.spring.start.site.extension.dependency.springcloud;
 import java.util.Arrays;
 
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 
@@ -33,12 +34,10 @@ class SpringCloudFunctionHelpDocumentCustomizerTests extends AbstractExtensionTe
 
 	private static final String AZURE_SECTION_TITLE = "## Running Spring Cloud Function applications on Microsoft Azure";
 
-	private static final String SPRING_BOOT_VERSION = "3.2.0";
-
 	@Test
 	void functionBuildSetupInfoSectionAddedForMaven() {
 		ProjectRequest request = createProjectRequest();
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		request.setType("maven-build");
 		request.setDependencies(Arrays.asList("cloud-function", "azure-support"));
 		assertThat(helpDocument(request)).contains(AZURE_SECTION_TITLE);
@@ -47,7 +46,7 @@ class SpringCloudFunctionHelpDocumentCustomizerTests extends AbstractExtensionTe
 	@Test
 	void functionBuildSetupInfoSectionAddedForGradle() {
 		ProjectRequest request = createProjectRequest();
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		request.setType("gradle-build");
 		request.setDependencies(Arrays.asList("cloud-function", "azure-support"));
 		assertThat(helpDocument(request)).contains(AZURE_SECTION_TITLE);

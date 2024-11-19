@@ -18,6 +18,7 @@ package io.spring.start.site.extension.dependency.activemq;
 
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 
@@ -32,27 +33,18 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ArtemisProjectGenerationConfigurationTests extends AbstractExtensionTests {
 
-	private static final String SPRING_BOOT_VERSION = "3.3.0";
-
 	@Test
 	void dockerComposeWhenDockerComposeIsNotSelectedDoesNotCreateService() {
 		ProjectRequest request = createProjectRequest("web", "artemis");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		ProjectStructure structure = generateProject(request);
 		assertThat(structure.getProjectDirectory().resolve("compose.yaml")).doesNotExist();
 	}
 
 	@Test
-	void dockerComposeWhenIncompatibleSpringBootVersionDoesNotCreateService() {
-		ProjectRequest request = createProjectRequest("docker-compose", "artemis");
-		request.setBootVersion("3.2.0");
-		assertThat(composeFile(request)).doesNotContain("artemis");
-	}
-
-	@Test
 	void dockerComposeCreatesAppropriateService() {
 		ProjectRequest request = createProjectRequest("docker-compose", "artemis");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(composeFile(request)).hasSameContentAs(new ClassPathResource("compose/artemis.yaml"));
 	}
 

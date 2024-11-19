@@ -17,6 +17,7 @@
 package io.spring.start.site.extension.dependency.observability;
 
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.assertj.core.api.ListAssert;
 import org.junit.jupiter.api.Test;
@@ -30,33 +31,22 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ObservabilityHelpDocumentCustomizerTests extends AbstractExtensionTests {
 
-	private static final String OLD_SPRING_BOOT_VERSION = "3.2.0";
-
-	private static final String SPRING_BOOT_VERSION = "3.3.0";
-
 	@Test
 	void linksAddedToHelpDocumentForGradleBuild() {
-		assertHelpDocument(SPRING_BOOT_VERSION, "distributed-tracing").contains(
+		assertHelpDocument("distributed-tracing").contains(
 				"* [Distributed Tracing Reference Guide](https://docs.micrometer.io/tracing/reference/index.html)",
 				"* [Getting Started with Distributed Tracing](https://docs.spring.io/spring-boot/3.3.0/reference/actuator/tracing.html)");
 	}
 
 	@Test
-	void linksAddedToHelpDocumentForGradleBuildWithOldSpringBootVersion() {
-		assertHelpDocument(OLD_SPRING_BOOT_VERSION, "distributed-tracing").contains(
-				"* [Distributed Tracing Reference Guide](https://docs.micrometer.io/tracing/reference/index.html)",
-				"* [Getting Started with Distributed Tracing](https://docs.spring.io/spring-boot/docs/3.2.0/reference/html/actuator.html#actuator.micrometer-tracing.getting-started)");
-	}
-
-	@Test
 	void linksNotAddedToHelpDocumentForBuildWithoutTracing() {
-		assertHelpDocument(SPRING_BOOT_VERSION).noneMatch((line) -> line.contains("Tracing"));
+		assertHelpDocument().noneMatch((line) -> line.contains("Tracing"));
 	}
 
-	private ListAssert<String> assertHelpDocument(String version, String... dependencies) {
+	private ListAssert<String> assertHelpDocument(String... dependencies) {
 		ProjectRequest request = createProjectRequest(dependencies);
 		request.setType("gradle-build");
-		request.setBootVersion(version);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		return assertThat(helpDocument(request)).lines();
 	}
 

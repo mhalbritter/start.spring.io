@@ -18,6 +18,7 @@ package io.spring.start.site.extension.dependency.oracle;
 
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 
@@ -33,8 +34,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class OracleProjectGenerationConfigurationTests extends AbstractExtensionTests {
 
-	private static final String SPRING_BOOT_VERSION = "3.2.0";
-
 	@Test
 	void doesNotGenerateComposeYamlWithoutDockerCompose() {
 		ProjectRequest request = createProjectRequest("web", "oracle");
@@ -43,23 +42,23 @@ class OracleProjectGenerationConfigurationTests extends AbstractExtensionTests {
 	}
 
 	@Test
-	void createsOracleFreeServiceWithBoot32() {
+	void createsOracleFreeService() {
 		ProjectRequest request = createProjectRequest("docker-compose", "oracle");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(composeFile(request)).hasSameContentAs(new ClassPathResource("compose/oracle-free.yaml"));
 	}
 
 	@Test
-	void createsOracleFreeServiceWithBoot32AndSpringAi() {
+	void createsOracleFreeServiceSpringAi() {
 		ProjectRequest request = createProjectRequest("docker-compose", "spring-ai-vectordb-oracle");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(composeFile(request)).hasSameContentAs(new ClassPathResource("compose/oracle-free.yaml"));
 	}
 
 	@Test
-	void declaresOracleFreeContainerBeanWithBoot32() {
+	void declaresOracleFreeContainerBean() {
 		ProjectRequest request = createProjectRequest("testcontainers", "oracle");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		request.setLanguage("java");
 		assertThat(generateProject(request)).textFile("src/test/java/com/example/demo/TestcontainersConfiguration.java")
 			.contains("import org.testcontainers.oracle.OracleContainer;")

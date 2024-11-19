@@ -19,6 +19,7 @@ package io.spring.start.site.extension.dependency.springcloud;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 
@@ -32,15 +33,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class SpringCloudFunctionBuildCustomizerTests extends AbstractExtensionTests {
 
-	private static final String SPRING_BOOT_VERSION = "3.3.0";
-
 	static final Dependency WEB_ADAPTER = Dependency.withId("cloud-function-web", "org.springframework.cloud",
 			"spring-cloud-function-web");
 
 	@Test
 	void functionOnly() {
 		ProjectRequest request = createProjectRequest("cloud-function");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(mavenPom(request)).hasDependency(getDependency("cloud-function"))
 			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST))
 			.hasDependency(Dependency.createSpringBootStarter(""))
@@ -52,7 +51,7 @@ class SpringCloudFunctionBuildCustomizerTests extends AbstractExtensionTests {
 	@Test
 	void web() {
 		ProjectRequest request = createProjectRequest("web", "cloud-function");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		BillOfMaterials bom = getBom("spring-cloud", request.getBootVersion());
 		assertThat(mavenPom(request)).hasDependency(getDependency("web"))
 			.hasDependency(WEB_ADAPTER)
@@ -65,7 +64,7 @@ class SpringCloudFunctionBuildCustomizerTests extends AbstractExtensionTests {
 	@Test
 	void webflux() {
 		ProjectRequest request = createProjectRequest("webflux", "cloud-function");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		BillOfMaterials bom = getBom("spring-cloud", request.getBootVersion());
 		assertThat(mavenPom(request)).hasDependency(getDependency("webflux"))
 			.hasDependency(WEB_ADAPTER)

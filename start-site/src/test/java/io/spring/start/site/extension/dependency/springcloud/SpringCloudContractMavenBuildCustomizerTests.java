@@ -18,6 +18,7 @@ package io.spring.start.site.extension.dependency.springcloud;
 
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 
@@ -32,12 +33,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class SpringCloudContractMavenBuildCustomizerTests extends AbstractExtensionTests {
 
-	private static final String SPRING_BOOT_VERSION = "3.3.0";
-
 	@Test
 	void springCloudContractVerifierPluginAddedWhenSCCDependencyPresent() {
 		ProjectRequest request = createProjectRequest("cloud-contract-verifier");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(mavenPom(request)).hasDependency(getDependency("cloud-contract-verifier"))
 			.hasText("/project/build/plugins/plugin[1]/groupId", "org.springframework.cloud")
 			.hasText("/project/build/plugins/plugin[1]/artifactId", "spring-cloud-contract-maven-plugin")
@@ -53,7 +52,7 @@ class SpringCloudContractMavenBuildCustomizerTests extends AbstractExtensionTest
 	@Test
 	void springCloudContractVerifierPluginForSpringBootWithJUnit5ByDefault() {
 		ProjectRequest request = createProjectRequest("cloud-contract-verifier");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(mavenPom(request))
 			.hasText("/project/build/plugins/plugin[1]/artifactId", "spring-cloud-contract-maven-plugin")
 			.hasText("/project/build/plugins/plugin[1]/configuration/testFramework", "JUNIT5");
@@ -62,7 +61,7 @@ class SpringCloudContractMavenBuildCustomizerTests extends AbstractExtensionTest
 	@Test
 	void springCloudContractVerifierPluginWithTestModeSetWhenWebFluxIsPresent() {
 		ProjectRequest request = createProjectRequest("cloud-contract-verifier", "webflux");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(mavenPom(request))
 			.hasText("/project/build/plugins/plugin[1]/artifactId", "spring-cloud-contract-maven-plugin")
 			.hasText("/project/build/plugins/plugin[1]/configuration/testMode", "WEBTESTCLIENT");
@@ -71,7 +70,7 @@ class SpringCloudContractMavenBuildCustomizerTests extends AbstractExtensionTest
 	@Test
 	void springWebTestClientDependencyAddedWhenWebFluxIsPresent() {
 		ProjectRequest request = createProjectRequest("cloud-contract-verifier", "webflux");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		Dependency springWebTestClientDep = Dependency.withId("rest-assured-spring-web-test-client", "io.rest-assured",
 				"spring-web-test-client");
 		springWebTestClientDep.setScope(Dependency.SCOPE_TEST);

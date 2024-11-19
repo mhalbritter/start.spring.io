@@ -18,6 +18,7 @@ package io.spring.start.site.extension.code.kotlin;
 
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +34,7 @@ class KotlinCoroutinesCustomizerTests extends AbstractExtensionTests {
 	@Test
 	void kotlinCoroutinesIsAdded() {
 		ProjectRequest request = createProjectRequest("webflux");
-		request.setBootVersion("3.3.0");
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		request.setLanguage("kotlin");
 		ProjectStructure project = generateProject(request);
 		assertThat(project).mavenBuild().hasDependency("org.jetbrains.kotlinx", "kotlinx-coroutines-reactor");

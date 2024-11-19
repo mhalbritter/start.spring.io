@@ -19,6 +19,7 @@ package io.spring.start.site.extension.dependency.springai;
 import java.util.stream.Stream;
 
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -57,7 +58,7 @@ class SpringAiTestcontainersProjectGenerationConfigurationTests extends Abstract
 	private ProjectRequest createProject(String... styles) {
 		ProjectRequest projectRequest = createProjectRequest(styles);
 		projectRequest.setLanguage("java");
-		projectRequest.setBootVersion("3.3.0");
+		projectRequest.setBootVersion(SupportedBootVersion.latest().getVersion());
 		return projectRequest;
 	}
 

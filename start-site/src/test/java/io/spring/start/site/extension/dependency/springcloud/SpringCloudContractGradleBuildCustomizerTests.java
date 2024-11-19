@@ -17,6 +17,7 @@
 package io.spring.start.site.extension.dependency.springcloud;
 
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 
@@ -31,40 +32,38 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class SpringCloudContractGradleBuildCustomizerTests extends AbstractExtensionTests {
 
-	private static final String SPRING_BOOT_VERSION = "3.3.0";
-
 	@Test
 	void springCloudContractVerifierPluginAddedWhenSCCDependencyPresent() {
 		ProjectRequest request = createProjectRequest("cloud-contract-verifier");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(gradleBuild(request)).contains("id 'org.springframework.cloud.contract' version '");
 	}
 
 	@Test
 	void springCloudContractVerifierPluginNotAddedWhenSCCDependencyAbsent() {
 		ProjectRequest request = createProjectRequest();
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(gradleBuild(request)).doesNotContain("org.springframework.cloud.contract");
 	}
 
 	@Test
 	void springCloudContractVerifierPluginContractTestWithJUnit5ByDefault() {
 		ProjectRequest request = createProjectRequest("cloud-contract-verifier");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(gradleBuild(request)).containsSubsequence("tasks.named('contractTest') {", "useJUnitPlatform()");
 	}
 
 	@Test
 	void springCloudContractVerifierPluginWithGroovyDslAndWithTestModeSetWhenWebFluxIsPresent() {
 		ProjectRequest request = createProjectRequest("cloud-contract-verifier", "webflux");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(gradleBuild(request)).containsSubsequence("contracts {", "testMode = 'WebTestClient'");
 	}
 
 	@Test
 	void springCloudContractVerifierPluginWithKotlinDslAndTestModeSetWhenWebFluxIsPresent() {
 		ProjectRequest request = createProjectRequest("cloud-contract-verifier", "webflux");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(gradleKotlinDslBuild(request))
 			.contains("import org.springframework.cloud.contract.verifier.config.TestMode")
 			.containsSubsequence("contracts {", "testMode = TestMode.WEBTESTCLIENT");
@@ -73,7 +72,7 @@ class SpringCloudContractGradleBuildCustomizerTests extends AbstractExtensionTes
 	@Test
 	void springWebTestClientDependencyAddedWhenWebFluxIsPresent() {
 		ProjectRequest request = createProjectRequest("cloud-contract-verifier", "webflux");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(gradleBuild(request)).contains("testImplementation 'io.rest-assured:spring-web-test-client'");
 	}
 

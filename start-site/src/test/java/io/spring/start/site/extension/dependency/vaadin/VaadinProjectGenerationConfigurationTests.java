@@ -18,6 +18,7 @@ package io.spring.start.site.extension.dependency.vaadin;
 
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.api.Test;
 
@@ -31,12 +32,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class VaadinProjectGenerationConfigurationTests extends AbstractExtensionTests {
 
-	private static final String SPRING_BOOT_VERSION = "3.3.0";
-
 	@Test
 	void mavenBuildWithVaadinAddProductionProfileWithoutProductionModeFlag() {
 		ProjectRequest request = createProjectRequest("vaadin", "data-jpa");
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		assertThat(mavenPom(request)).hasProfile("production").lines().containsSequence(
 		// @formatter:off
 				"		<profile>",
@@ -124,7 +123,7 @@ class VaadinProjectGenerationConfigurationTests extends AbstractExtensionTests {
 	@Override
 	protected ProjectRequest createProjectRequest(String... dependencies) {
 		ProjectRequest request = super.createProjectRequest(dependencies);
-		request.setBootVersion(SPRING_BOOT_VERSION);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		return request;
 	}
 

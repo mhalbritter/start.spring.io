@@ -18,6 +18,7 @@ package io.spring.start.site.extension.dependency.observability;
 
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.start.site.SupportedBootVersion;
 import io.spring.start.site.extension.AbstractExtensionTests;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -31,19 +32,16 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ObservabilityActuatorBuildCustomizerTests extends AbstractExtensionTests {
 
-	private static final String SPRING_BOOT_VERSION = "3.3.0";
-
 	@ParameterizedTest
 	@ValueSource(strings = { "datadog", "dynatrace", "influx", "graphite", "new-relic", "otlp-metrics", "prometheus",
 			"distributed-tracing", "zipkin", "wavefront" })
 	void actuatorIsAddedWithObservabilityEntries(String dependency) {
-		assertThat(generateProject(SPRING_BOOT_VERSION, dependency)).mavenBuild()
-			.hasDependency(getDependency("actuator"));
+		assertThat(generateProject(dependency)).mavenBuild().hasDependency(getDependency("actuator"));
 	}
 
-	private ProjectStructure generateProject(String bootVersion, String... dependencies) {
+	private ProjectStructure generateProject(String... dependencies) {
 		ProjectRequest request = createProjectRequest(dependencies);
-		request.setBootVersion(bootVersion);
+		request.setBootVersion(SupportedBootVersion.latest().getVersion());
 		request.setType("maven-build");
 		return generateProject(request);
 	}
