@@ -25,6 +25,7 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.start.site.extension.dependency.distributedtracing.DistributedTracingBridgeBuildCustomizer;
+import io.spring.start.site.extension.dependency.ldap.LdapUnboundIdBuildCustomizer;
 import io.spring.start.site.extension.dependency.liquibase.LiquibaseProjectContributor;
 import io.spring.start.site.extension.dependency.lombok.LombokGradleBuildCustomizer;
 import io.spring.start.site.extension.dependency.mybatis.MyBatisTestBuildCustomizer;
@@ -128,6 +129,13 @@ public class DependencyProjectGenerationConfiguration {
 	@ConditionalOnPlatformVersion("4.0.0-M1")
 	DistributedTracingBridgeBuildCustomizer distributedTracingBridgeBuildCustomizer() {
 		return new DistributedTracingBridgeBuildCustomizer();
+	}
+
+	@Bean
+	@ConditionalOnRequestedDependency("unboundid-ldap")
+	@ConditionalOnPlatformVersion("4.0.0-M1")
+	LdapUnboundIdBuildCustomizer ldapUnboundIdBuildCustomizer() {
+		return new LdapUnboundIdBuildCustomizer();
 	}
 
 }
