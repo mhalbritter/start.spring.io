@@ -18,11 +18,13 @@ package io.spring.start.site.extension.dependency;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
+import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.condition.ConditionalOnRequestedDependency;
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.start.site.extension.dependency.distributedtracing.DistributedTracingBridgeBuildCustomizer;
 import io.spring.start.site.extension.dependency.liquibase.LiquibaseProjectContributor;
 import io.spring.start.site.extension.dependency.lombok.LombokGradleBuildCustomizer;
 import io.spring.start.site.extension.dependency.mybatis.MyBatisTestBuildCustomizer;
@@ -119,6 +121,13 @@ public class DependencyProjectGenerationConfiguration {
 	@ConditionalOnRequestedDependency("spring-shell")
 	public SpringShellTestBuildCustomizer springShellTestBuildCustomizer() {
 		return new SpringShellTestBuildCustomizer();
+	}
+
+	@Bean
+	@ConditionalOnRequestedDependency("distributed-tracing")
+	@ConditionalOnPlatformVersion("4.0.0-M1")
+	DistributedTracingBridgeBuildCustomizer distributedTracingBridgeBuildCustomizer() {
+		return new DistributedTracingBridgeBuildCustomizer();
 	}
 
 }

@@ -1085,8 +1085,12 @@ initializr:
         - name: Distributed Tracing
           id: distributed-tracing
           description: Enable span and trace IDs in logs.
-          groupId: io.micrometer
-          artifactId: micrometer-tracing-bridge-brave
+          mappings:
+            - compatibilityRange: "[3.4.0,4.0.0-M1)"
+              group-id: io.micrometer
+              artifact-id: micrometer-tracing-bridge-brave
+          groupId: org.springframework.boot
+          artifactId: spring-boot-tracing
           starter: false
         - name: Wavefront
           id: wavefront
