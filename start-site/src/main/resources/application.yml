@@ -1102,8 +1102,12 @@ initializr:
         - name: Zipkin
           id: zipkin
           description: Enable and expose span and trace IDs to Zipkin.
-          groupId: io.zipkin.reporter2
-          artifactId: zipkin-reporter-brave
+          mappings:
+            - compatibilityRange: "[3.4.0,4.0.0-M1)"
+              group-id: io.zipkin.reporter2
+              artifact-id: zipkin-reporter-brave
+          groupId: org.springframework.boot
+          artifactId: spring-boot-zipkin
           starter: false
     - name: Testing
       content:
