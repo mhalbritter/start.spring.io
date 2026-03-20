@@ -28,17 +28,18 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  */
 abstract class AbstractGrpcGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
-	private static final String GRPC_PLUGIN_VERSION = "0.9.5";
+	private final String pluginVersion;
 
 	private final char quote;
 
-	AbstractGrpcGradleBuildCustomizer(char quote) {
+	AbstractGrpcGradleBuildCustomizer(char quote, String pluginVersion) {
+		this.pluginVersion = pluginVersion;
 		this.quote = quote;
 	}
 
 	@Override
 	public void customize(GradleBuild build) {
-		build.plugins().add("com.google.protobuf", (plugin) -> plugin.setVersion(GRPC_PLUGIN_VERSION));
+		build.plugins().add("com.google.protobuf", (plugin) -> plugin.setVersion(this.pluginVersion));
 		customizeExtensions(build.extensions());
 	}
 

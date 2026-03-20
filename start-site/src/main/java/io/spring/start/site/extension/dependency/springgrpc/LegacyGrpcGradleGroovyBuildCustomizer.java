@@ -20,18 +20,26 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleExtensionContaine
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 
 /**
- * {@link BuildCustomizer} to apply the 'com.google.protobuf' plugin.
+ * {@link BuildCustomizer} to customize the Groovy DSL Gradle build to build gRPC
+ * projects.
  *
  * @author Moritz Halbritter
  */
-class GrpcGradleKotlinBuildCustomizer extends AbstractGrpcGradleBuildCustomizer {
+class LegacyGrpcGradleGroovyBuildCustomizer extends AbstractGrpcGradleBuildCustomizer {
 
-	GrpcGradleKotlinBuildCustomizer(String pluginVersion) {
-		super('\"', pluginVersion);
+	LegacyGrpcGradleGroovyBuildCustomizer(String pluginVersion) {
+		super('\'', pluginVersion);
 	}
 
 	@Override
 	protected void customizeExtensions(GradleExtensionContainer extensions) {
+		extensions.customize("protobuf", (protobuf) -> {
+			protobuf.nested("protoc", (protoc) -> protoc.attribute("artifact", quote("com.google.protobuf:protoc")));
+			protobuf.nested("plugins", (plugins) -> plugins.nested("grpc",
+					(grpc) -> grpc.attribute("artifact", quote("io.grpc:protoc-gen-grpc-java"))));
+			protobuf.nested("generateProtoTasks", (generateProtoTasks) -> generateProtoTasks.nested("all()*.plugins",
+					(plugins) -> plugins.nested("grpc", (grpc) -> grpc.invoke("option", quote("@generated=omit")))));
+		});
 	}
 
 }
